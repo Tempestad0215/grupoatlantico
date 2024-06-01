@@ -2,6 +2,7 @@
 
 namespace App\Dtos;
 
+use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\PutUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Mail\UserRegistered;
@@ -14,6 +15,7 @@ use Illuminate\Support\Str;
 
 use function App\Global\errorHttp;
 use function App\Global\generateCode;
+use function App\Global\successHttp;
 
 Class UserDto {
 
@@ -76,6 +78,60 @@ Class UserDto {
             // Crear la respuesta
             $response = errorHttp("Error en esta peticion",400, $th->getMessage());
             // DEvolver los datos
+            throw new HttpResponseException($response);
+        }
+    }
+
+
+    // Login de usuarios
+    public function login(LoginUserRequest $request)
+    {
+        try {
+            // Tratar de econtrar el email
+            $user = User::where("email", $request->email)->first();
+
+
+            // Verificar que el usuario exista correctamente
+            if(!$user)
+            {
+                // Crear la respuesta
+                $response = errorHttp("Usuario no existe o mal escrito",400);
+
+                // Enviar la respuesta
+                return $response;
+            }
+
+            // Verificar la password
+            if(!Hash::check($request->password, $user->password))
+            {
+                // Crear la respuesta
+                $response = errorHttp("Contraseña incorrecta",400);
+
+                // Enviar la respuesta
+                return $response;
+            }
+
+            // Crear el token de todo
+            $token = $user->createToken("TOKEN-ACCESS",$user->access)->plainTextToken;
+
+            // devolver el token correctamente
+            $data = [
+                "token" => $token
+            ];
+
+            // Crear la respuesta
+            $response = successHttp(config('msj.login'),200, $data);
+
+            // Devolver la respuesta
+            return $response;
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            // Crear la respuesta
+            $response = errorHttp(config('msj.error'),400, $th->getMessage());
+
+            // Devolver la respuesta
             throw new HttpResponseException($response);
         }
     }

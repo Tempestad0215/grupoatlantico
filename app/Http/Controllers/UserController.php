@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dtos\UserDto;
+use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\PutUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
@@ -24,8 +25,8 @@ class UserController extends Controller implements HasMiddleware
     public static function middleware()
     {
         return [
-            new Middleware("auth:sanctum", except: ["auth"]),
-            new Middleware("verified")
+            new Middleware("auth:sanctum", except: ["auth",'login']),
+            new Middleware("verified", except: ["login"]),
         ];
     }
 
@@ -112,8 +113,13 @@ class UserController extends Controller implements HasMiddleware
     }
 
     // Crear el login de usuario
-    public function login(User $user)
+    public function login(LoginUserRequest $request )
     {
+        // Llamar el login
+        $data = $this->userDto->login($request);
+
+
+        return $data;
 
     }
 
