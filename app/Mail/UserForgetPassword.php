@@ -10,18 +10,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UserRegistered extends Mailable implements ShouldQueue
+class UserForgetPassword extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-
-    public $user;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(User $user)
+    public function __construct(
+        public User $user,
+    )
     {
-        $this->user = $user;
+        //
     }
 
     /**
@@ -30,7 +30,7 @@ class UserRegistered extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Usuario registrado correctamente',
+            subject: 'Cambio de contraseña',
         );
     }
 
@@ -40,9 +40,9 @@ class UserRegistered extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'email.UserRegistered',
+            view: 'email.ForgetPassword',
             with: [
-                'code' => $this->user->code
+                "code" => $this->user->code,
             ]
         );
     }

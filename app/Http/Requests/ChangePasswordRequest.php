@@ -9,7 +9,7 @@ use Illuminate\Validation\Rules\Password;
 
 use function App\Global\errorHttp;
 
-class StoreUserRequest extends FormRequest
+class ChangePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,16 +27,13 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required','string','max:75'],
-            'last_name' => ['required','string','max:75'],
-            'email'=> ['required','string','email','unique:users,email'],
             'password'=> ['required','string','max:70', Password::min(8)->mixedCase()->numbers()->symbols()],
             'password_confirmation' => ['required','string','max:70',Password::min(8)->mixedCase()->numbers()->symbols()],
-            'access' => ['array','required']
         ];
     }
 
 
+    // Si la validacion falla
 
     protected function failedValidation(Validator $validator)
     {

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Dtos\UserDto;
+use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\CheckCode;
+use App\Http\Requests\ForgetPasswordUserRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\PutUserRequest;
 use App\Http\Requests\StoreUserRequest;
@@ -11,8 +14,10 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 
 use function App\Global\errorHttp;
+use function App\Global\generateCode;
 use function App\Global\successHttp;
 
 class UserController extends Controller implements HasMiddleware
@@ -25,8 +30,9 @@ class UserController extends Controller implements HasMiddleware
     public static function middleware()
     {
         return [
-            new Middleware("auth:sanctum", except: ["auth",'login']),
-            new Middleware("verified", except: ["login"]),
+            new Middleware("auth:sanctum", except: ["auth","login","forgetPassword","changePassword"]),
+            new Middleware("verified", except: ["login","verifyEmail","forgetPassword"]),
+            new Middleware(["auth:sanctum","ability:change-password"], only:["changePassword"]),
         ];
     }
 
@@ -36,8 +42,6 @@ class UserController extends Controller implements HasMiddleware
         // Llamar el dto
         $this->userDto = new UserDto();
     }
-
-
 
     /**
      * Display a listing of the resource.
@@ -123,5 +127,119 @@ class UserController extends Controller implements HasMiddleware
 
     }
 
+    // Verificar el codigo del usuarios
+    public function verifyEmail(CheckCode $request)
+    {
+        try {
+
+            // Obtener los datos del usuario
+            $user = Auth::user();
+
+            // Verificar el codigo ya guardado por el que llega
+            if($user->code === $request->code)
+            {
+                // Volver a generar el codigo
+                $code = generateCode();
+
+                // Actualizar los datos del usuarios
+                User::where("id", $user->id)->update([
+                    "code" => $code,
+                    "email_verified_at" => now()
+                ]);
+
+                // Devolver el mensaje de exito
+                return successHttp(config("msj.verify"),200);
+
+            }
+
+            return errorHttp(config("msj.error"),400,[
+                "error" => "El código de verificación no coincide"
+            ]);
+
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            // respuesta
+            $response = errorHttp(config('msj.error'),400, $th->getMessage());
+
+            // Devolver los datos
+            throw new HttpResponseException($response);
+        }
+    }
+
+
+    // Olvido de password de los usuarios
+    public function forgetPassword(ForgetPasswordUserRequest $request)
+    {
+        // recuperar la data
+        $data = $this->userDto->forgetPassword($request);
+
+        // Devolver los datos
+        return $data;
+    }
+
+    // Cambiar la password
+    public function checkCode(CheckCode $request)
+    {
+        try {
+
+            // Tomar el usuario por el codigo
+            $user = User::where("code", $request->code)->first();
+
+
+            // Verificar que el codigo coincida
+            if($user)
+            {
+                return successHttp(config("msj.code"),200);
+            }
+
+            return errorHttp(config("El codigo no coincide"),400);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            // Crear la respuesta
+            $response = errorHttp(config("msj.error"),400, $th->getMessage());
+
+            // Devolver la respuesta
+            throw new HttpResponseException($response);
+        }
+    }
+
+    // Cambiar la ppassword de todo
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        // Llamr los datos
+
+        // Conseguiir el usaurio
+        $data = $this->userDto->changePassword($request);
+        // Devover los datos
+        return $data;
+    }
+
+
+    // Cerrar la session del usuario
+    public function logOut(Request $request)
+    {
+        try {
+
+            // Eliminar el token del usuario autenticado
+            $request->user()->currentAccessToken()->delete();
+
+            // Enviar la respuesta
+            return successHttp(config("msj.log-out"),200);
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            // Respuesta
+            $response = errorHttp(config("msj.error"),400, $th->getMessage());
+
+            // Enviar la respuesta
+            throw new HttpResponseException($response);
+        }
+    }
 
 }

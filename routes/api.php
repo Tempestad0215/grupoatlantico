@@ -12,6 +12,10 @@ Route::controller(UserController::class)
     ->group(function () {
         Route::post("/", "store");
         Route::get("/{user}","show");
+        Route::put("/change-password","changePassword");
         Route::put("/{user}","update");
-        Route::post('/login','login');
+        Route::post("/login","login");
+        Route::post("/verify","verifyEmail");
+        Route::post("/forget-password","forgetPassword");
+        Route::post("/log-out","logOut");
     });
