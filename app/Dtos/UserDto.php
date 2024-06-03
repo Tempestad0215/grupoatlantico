@@ -12,6 +12,7 @@ use App\Mail\UserRegistered;
 use App\Models\ChangePassword;
 use App\Models\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -95,7 +96,8 @@ Class UserDto {
     {
         try {
             // Tratar de econtrar el email
-            $user = User::where("email", $request->email)->first();
+            $user = User::where("status",false)
+                ->where("email", $request->email)->first();
 
             // Verificar que el usuario exista correctamente
             if(!$user)
@@ -220,6 +222,43 @@ Class UserDto {
 
         } catch (\Throwable $th) {
             //throw $th;
+            // Respuesta
+            $response = errorHttp(config("msj.error"),400, $th->getMessage());
+
+            // Devovolver los datos
+            throw new HttpResponseException($response);
+        }
+    }
+
+    // mostrar todos los usuarios
+    public function show(Request $request)
+    {
+        try {
+
+            // Sacar los datos a buscar
+            $limit = $request->get("limit",10);
+            $search = $request->get("search");
+
+            // Buscar los datos
+            $data = User::where("status",false)
+                ->where(function ($query) use ($limit, $search) {
+                    $query->where("name","like","%".$search."%")
+                    ->orWhere("email","like","%".$search."%")
+                    ->orWhere("last_name","like","%".$search."%");
+                })
+                ->latest()
+                ->simplePaginate($limit);
+
+            // Respuesta
+            $response = successHttp(config("msj.get"),200, $data);
+
+            // Devolver la respuesta
+            return $response;
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+
             // Respuesta
             $response = errorHttp(config("msj.error"),400, $th->getMessage());
 

@@ -13,4 +13,5 @@ return [
     "code"=> "Codigo verificado correctamente",
     "passwordChange"=> "Contraseña actualizada correctamente",
     "log-out"=> "Session cerrada correctamente",
+    "get"=> "Registro obtenido correctamente",
 ];

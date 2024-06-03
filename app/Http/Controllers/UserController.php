@@ -63,10 +63,16 @@ class UserController extends Controller implements HasMiddleware
         return successHttp("Usuario registrado correctamente", 200, $data);
     }
 
+    public function show(Request $request)
+    {
+        // Devolver la respuesta
+        return $this->userDto->show($request);
+    }
+
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function edit(User $user)
     {
         try {
 
@@ -217,7 +223,6 @@ class UserController extends Controller implements HasMiddleware
         // Devover los datos
         return $data;
     }
-
 
     // Cerrar la session del usuario
     public function logOut(Request $request)
