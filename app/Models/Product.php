@@ -4,36 +4,38 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Branches extends Model
+class Product extends Model
 {
     use HasFactory;
 
 
-    // Datos para interacturar
+    // Datos a interacturar
     protected $fillable = [
         "name",
         "description",
-        "status"
+        "branch_id",
+        "stock",
+        "status",
     ];
 
-
-    // Formatear los dataos
+    // Formatear los datos
     public function casts():array
     {
         return [
-            "status" => "boolean"
+            "status"=> "boolean",
         ];
     }
 
 
-
     // Relaciones
-
-    public function product():HasMany
+    public function branch(): BelongsTo
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Branches::class);
     }
+
+
+
 
 }

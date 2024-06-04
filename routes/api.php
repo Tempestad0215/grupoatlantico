@@ -3,6 +3,7 @@
 use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\DeparmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -56,4 +57,11 @@ Route::controller(EmployeeController::class)
         Route::get("/","show");
         Route::get("/{employee}","edit");
         Route::put("/{employee}","update");
+    });
+
+// Productos
+Route::controller(ProductController::class)
+    ->prefix("product")
+    ->group(function () {
+        Route::post("/","store");
     });
