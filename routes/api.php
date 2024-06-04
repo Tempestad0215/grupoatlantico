@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BranchesController;
+use App\Http\Controllers\DeparmentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,16 @@ Route::controller(BranchesController::class)
         Route::get("/{branch}","edit");
         Route::put("/{branch}","update");
         Route::put("/delete/{branch}","destroy");
+    });
+
+
+// Departamento
+Route::controller(DeparmentController::class)
+    ->prefix("deparment")
+    ->group(function () {
+        Route::post("/","store");
+        Route::get("/","show");
+        Route::put("/{deparment}","update");
+        Route::get("/{deparment}","edit");
+        Route::put("/delete/{deparment}","destroy");
     });
