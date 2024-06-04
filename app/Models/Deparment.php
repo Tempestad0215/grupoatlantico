@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Deparment extends Model
 {
@@ -22,4 +23,17 @@ class Deparment extends Model
             "status" => "boolean"
         ];
     }
+
+
+
+    // Relaciones
+
+
+
+
+    public function employee(): HasMany
+    {
+        return $this->hasMany(Employee::class);
+    }
+
 }

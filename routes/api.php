@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\DeparmentController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,4 +45,15 @@ Route::controller(DeparmentController::class)
         Route::put("/{deparment}","update");
         Route::get("/{deparment}","edit");
         Route::put("/delete/{deparment}","destroy");
+    });
+
+
+// Empleado
+Route::controller(EmployeeController::class)
+    ->prefix("employee")
+    ->group(function () {
+        Route::post("/","store");
+        Route::get("/","show");
+        Route::get("/{employee}","edit");
+        Route::put("/{employee}","update");
     });
