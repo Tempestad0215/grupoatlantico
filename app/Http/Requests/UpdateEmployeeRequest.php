@@ -2,8 +2,12 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
+
+use function App\Global\errorHttp;
 
 class UpdateEmployeeRequest extends FormRequest
 {
@@ -33,5 +37,14 @@ class UpdateEmployeeRequest extends FormRequest
             "email"=> ["required","string","email",Rule::unique("employees")->ignore($id)],
             "deparment_id" => ["required","numeric","exists:deparments,id"],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        // Crear la respuesta
+        $response = errorHttp(config("msj.validation"),422, $validator->errors());
+
+        // Devolver la respuiesta con el error
+        throw new HttpResponseException($response);
     }
 }

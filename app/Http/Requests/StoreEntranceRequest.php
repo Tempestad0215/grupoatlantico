@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 use function App\Global\errorHttp;
 
-class StoreDeparmentRequest extends FormRequest
+class StoreEntranceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +26,12 @@ class StoreDeparmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=> ["required","string","max:75"],
-            "description"=> ["nullable","string","max:150"]
+            "order" => ["required","array"],
         ];
     }
 
+
+    // Validacion error
 
     protected function failedValidation(Validator $validator)
     {

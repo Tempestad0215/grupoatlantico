@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
+use function App\Global\errorHttp;
 
 class StoreBranchesRequest extends FormRequest
 {
@@ -25,5 +29,15 @@ class StoreBranchesRequest extends FormRequest
             "name" => ["required","string","min:4","max:50"],
             "description"=> ["nullable","string","max:150"],
         ];
+    }
+
+
+    protected function failedValidation(Validator $validator)
+    {
+        // Crear la respuesta
+        $response = errorHttp(config("msj.validation"),422, $validator->errors());
+
+        // Devolver la respuiesta con el error
+        throw new HttpResponseException($response);
     }
 }

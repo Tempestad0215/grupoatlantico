@@ -7,6 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
+use function App\Global\errorHttp;
+
 class PutUserRequest extends FormRequest
 {
     /**
@@ -40,11 +42,7 @@ class PutUserRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         // Crear la respuesta
-        $response = response()->json([
-            "status" => "error",
-            "message" => "La validación contiene errores",
-            "errors" => $validator->errors()
-        ],422);
+        $response = errorHttp(config("msj.validation"),422, $validator->errors());
 
         // Devolver la respuiesta con el error
         throw new HttpResponseException($response);

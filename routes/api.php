@@ -3,6 +3,7 @@
 use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\DeparmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EntranceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +63,18 @@ Route::controller(EmployeeController::class)
 // Productos
 Route::controller(ProductController::class)
     ->prefix("product")
+    ->group(function () {
+        Route::post("/","store");
+        Route::get("/","show");
+        Route::get("/{product}","edit");
+        Route::put("/{product}","update");
+        Route::put("/delete/{product}","destroy");
+    });
+
+
+// Entrada de producto
+Route::controller(EntranceController::class)
+    ->prefix("entrance")
     ->group(function () {
         Route::post("/","store");
     });

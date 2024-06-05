@@ -8,14 +8,14 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 use function App\Global\errorHttp;
 
-class StoreDeparmentRequest extends FormRequest
+class UpdateEntranceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -26,8 +26,7 @@ class StoreDeparmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=> ["required","string","max:75"],
-            "description"=> ["nullable","string","max:150"]
+            //
         ];
     }
 
