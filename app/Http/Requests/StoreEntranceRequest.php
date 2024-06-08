@@ -26,7 +26,10 @@ class StoreEntranceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "order" => ["required","array"],
+            'order' => ['required','array'],
+            'order.*.name' => ['required','string','min:4','max:70'],
+            'order.*.id' => ['required','numeric','exists:products,id'],
+            'info' => ['required','string','min:4'],
         ];
     }
 
@@ -36,7 +39,7 @@ class StoreEntranceRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         // Crear la respuesta
-        $response = errorHttp(config("msj.validation"),422, $validator->errors());
+        $response = errorHttp(config('msj.validation'),422, $validator->errors());
 
         // Devolver la respuiesta con el error
         throw new HttpResponseException($response);

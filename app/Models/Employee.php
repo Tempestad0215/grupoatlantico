@@ -13,11 +13,11 @@ class Employee extends Model
 
     // Los datos para interactur
     protected $fillable = [
-        "name",
-        "last_name",
-        "email",
-        "deparment_id",
-        "status"
+        'name',
+        'last_name',
+        'email',
+        'deparment_id',
+        'status'
     ];
 
 
@@ -25,7 +25,7 @@ class Employee extends Model
     public function casts()
     {
         return [
-            "status"=> "boolean",
+            'status'=> 'boolean',
         ];
     }
 

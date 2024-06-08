@@ -15,8 +15,8 @@ class UpdateEntranceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
-    }
+        return true;
+        }
 
     /**
      * Get the validation rules that apply to the request.
@@ -26,7 +26,15 @@ class UpdateEntranceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'order' => ['required','array'],
+            'order.*.name' => ['required','string','min:4','max:70'],
+            'order.*.id' => ['required','numeric','exists:products,id'],
+            'order.*.act' => ['required','string','min:1','max:1'],
+            'info' => ['required','string','min:4'],
+            'comment' => ['required','array'],
+            'comment.id' => ['required','numeric','exists:comments,id'],
+            'comment.info' => ['required','string','min:4']
+
         ];
     }
 

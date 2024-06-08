@@ -17,7 +17,8 @@ class DeparmentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->randomElement(['Tecnologia','Contabilidad','Despacho','Ventas','RRHH','Compras','Chofer','Ayudante']),
+            'description' => fake()->sentence(3),
         ];
     }
 }

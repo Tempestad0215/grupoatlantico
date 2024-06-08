@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Branches;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,10 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->randomElement(['Toner 135A','Toner 105A','Cable HDMI','Cable DP 5 Pie', 'Mouse x350', 'Teclado Dell']),
+            'description' => fake()->sentence(3),
+            'branch_id' => Branches::factory(),
+            'stock' => fake()->numberBetween(1,100),
         ];
     }
 }

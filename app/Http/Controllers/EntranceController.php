@@ -60,9 +60,11 @@ class EntranceController extends Controller implements HasMiddleware
     /**
      * Display the specified resource.
      */
-    public function show(Entrance $entrance)
+    public function show(Request $request)
     {
-        //
+
+        // llamar el metodo y mostrar los datos
+        return $this->entranceDto->show($request);
     }
 
     /**
@@ -70,7 +72,8 @@ class EntranceController extends Controller implements HasMiddleware
      */
     public function edit(Entrance $entrance)
     {
-        //
+        //llamar los datos y devolver los datos
+        return $this->entranceDto->edit($entrance);
     }
 
     /**
@@ -78,7 +81,8 @@ class EntranceController extends Controller implements HasMiddleware
      */
     public function update(UpdateEntranceRequest $request, Entrance $entrance)
     {
-        //
+        // llamar el metdo y devolver los datos
+        return $this->entranceDto->update($request,$entrance);
     }
 
     /**
@@ -86,6 +90,7 @@ class EntranceController extends Controller implements HasMiddleware
      */
     public function destroy(Entrance $entrance)
     {
-        //
+        // Llamar los datos y devolverlos
+        return $this->entranceDto->destroy($entrance);
     }
 }
